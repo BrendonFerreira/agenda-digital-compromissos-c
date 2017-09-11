@@ -1,149 +1,186 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<stdbool.h>
 
-#define MAX_VETOR 5
+// Definição da Estrutura Lista Linear Simplemente Encadeada
+typedef struct Bloco {
+    int dado;
+    struct Bloco *prox;
+} Nodo;
+//funções auxiliares
+//Inicializa a Lista Linear Simplesmente Encadeada
+void inicializa_lista(Nodo **N) {
+    *N = NULL;
+}
+//Aloca memória para um nodo da lista Linear Simplesmente Encadeada
+Nodo * Cria_Nodo() {
+    Nodo *p;
+    p = (Nodo *) malloc(sizeof(Nodo));
+    if(!p) {
+        printf("Problema de alocação");
+        exit(0);
+    }
+    return p;
+}
 
-typedef struct Vetor
+bool dado_esta_entre_os_nos( int dado, Nodo*aux1, Nodo*aux2 ){
+    return (dado >= aux1->dado) && (dado <= aux2->dado);
+}
+
+Node * pegar_o_ultimo_no( Nodo * aux ) {
+    while(aux->prox != NULL)
+        aux = aux->prox;
+    return aux
+}
+
+//Operações que incidem sobre a estrutura
+//Operação de Inserção no Final da Lista
+void insere_fim_lista(Nodo **N, int dado) {
+    Nodo *novo, * aux;
+    novo = Cria_Nodo( );
+    novo->dado = dado;
+    novo->prox = NULL;
+    if(*N == NULL)
+        *N = novo;
+    else {
+        aux = pegar_o_ultimo_no( *N );
+        aux->prox = novo;
+    }
+}
+//Operação de Inserção no Início da Lista
+void insere_inicio_lista(Nodo **N, int dado)
 {
- int dados[MAX_VETOR];
- int inicio, fim;
-} Tipo_Lista;
-
-Tipo_Lista lista;
-
-void insertStart(Tipo_Lista *v, int dado){
-	if(v -> fim < MAX_VETOR){
-  		v -> dados[v -> inicio] = dado;
-  		(v -> inicio)++;
-  		return 1;
-	}
+    Nodo *novo;
+    novo = Cria_Nodo();
+    novo->dado = dado;
+    novo->prox = *N;
+    *N = novo;
 }
-
-void insertEnd(Tipo_Lista *v, int dado){
-	if(v -> fim < MAX_VETOR){
-  		v -> dados[v -> fim] = dado;
-  		(v -> fim)++;
-  		return 1;
-	}
-return 0;
-}
-
-void insertOrdered(){
-		
-}
-
-int excludeStart( Tipo_Lista * v ){
-	if(v -> fim < MAX_VETOR){
-  		v -> dados[v -> inicio] = 'NULL';
-  		(v -> inicio)++;
-  		return 1;
+//Operação de Inserção ordenada
+void insere_ordenado_lista(Nodo **N, int dado)
+{
+    Nodo *novo, *aux1, *aux2;
+    novo = Cria_Nodo();
+    novo->dado = dado;
+    if(*N == NULL) {//lista está vazia
+        novo->prox = NULL;
+        *N=novo;
     }
-    return 0;
-}
-
-int excludeEnd(  Tipo_Lista * v  ){
-	if(v -> fim < MAX_VETOR){
-  		v -> dados[v -> fim] = 'NULL';
-  		(v -> fim)++;
-  		return 1;
-    }
-    return 0;
-}
-
-
-
-void excludeSpecific(Tipo_Lista * v, int indice){
-  int i, dado;
-  if (v -> fim != 0) //verifica se a lista está vazia
-  {
-    if ((indice >= 0) && (indice < v -> fim)) //verifica se o indice está correto
-    {
-      if (indice == 0) //verifica se exclui o primeiro elemento
-      {
-        if (excludeStart(&v) == 1)
-          printf("\nO elemento excluido da posicao %d foi: %d", indice, dado);
-        return 1;
-      } else {
-        if (indice == v -> fim - 1) //verifica se exclui o ultimo elemento
-        {
-          if (excludeEnd(&v) == 1)
-            printf("\nO elemento excluido da posicao %d foi: %d", indice, dado);
-          return 1;
-        } else {
-          dado = v -> dados[indice];
-          for (i = indice; i < v -> fim; i++)
-            v -> dados[i] = v -> dados[i + 1];
-          (v -> fim) --;
-          printf("\nO elemento excluido da posicao %d foi: %d", indice, dado);
-          return 1;
+    else {
+        if(dado <= (*N)->dado) // insere no incio da lista
+            insere_inicio_lista(N, dado);
+        else {
+            for(aux1=*N; aux1->prox != NULL; aux1 = aux1->prox) {
+                aux2 = aux1->prox;
+                if( dado_esta_entre_os_nos( dado, aux1, aux2 ) ) { //insere no meio da lista
+                    aux1->prox = novo;
+                    novo->prox = aux2;
+                    break;
+                }
+            }
+            if(aux1->prox == NULL)//insere no final da lista
+                insere_fim_lista(N, dado);
         }
-      }
     }
-    return -1;
-  }
-  return 0;
+}
+//Operação de Remoção do Início da Lista Linear Simplesmente Encadeada
+int remove_inicio_lista(Nodo **N, int *dado) {
+    Nodo *aux;
+    if(*N == NULL) //verifica se a lista está vazia
+        return 0;
+    else {
+        *dado = (*N)->dado;
+        aux = (*N)->prox;
+        free(*N);
+        *N = aux;
+    }
+    return 1;
 }
 
-void search(Tipo_Lista v, int dado, int * indice){
-  	int i, achou = 0;
-  	for (i = 0; i < v.fim - 1; i++) {
-    	if (v.dados[i] == dado) { 
-			* indice = i;
-      		achou = 1;
-      		break;
-    	}
-	}
-  	if (achou){
-    	return 1;
-	}
-  	return 0;
+//Operação de Remoção do Início da Lista Linear Simplesmente Encadeada
+int remove_final_lista(Nodo **N, int *dado) {
+    Nodo *aux, *anterior;
+    if(*N == NULL) //verifica se a lista está vazia
+        return 0;
+    else {
+
+        aux = *N;
+        while(aux->prox != NULL) {
+            anterior = aux;
+            aux = aux->prox;
+        }
+
+        *dado = aux->dado;
+        free(aux);
+        anterior->prox = NULL;
+
+    }
+    return 1;
 }
 
-void print(Tipo_Lista V){
-	int i;
-	printf("\n\n\n");
-	if (V.fim != 0) {
-	  for (i = 0; i < V.fim; i++)
-	    printf("\n%d", V.dados[i]);
-		return 1;
-	  }
-	  return 0;
-}
 
-int main(){
-	int option;
-	printf("Escolha que operação deseja realizar:\n1.Inserir no inicio\n2.Inserir no fim\n3.Inserir ordenado (no meio)\n4.Remover do inicio\n5.Remover do fim\n6.Remover especifico\n7.Buscar\n8.Imprimir lista\n0.Sair");
-	scanf("%d", &option);
-	switch(option){
-		case(1):
-			//insertStart(  );
-		break;
-		case(2):
-			//insertEnd();
-		break;
-		case(3):
-			//insertOrdered();
-		break;
-		case(4):
-			excludeStart( &lista );
-		break;
-		case(5):
-			excludeEnd( &lista );
-		break;
-		case(6):
-			//removeSpecific();
-		break;
-		case(7):
-			//search( lista );
-		break;
-		case(8):
-			lista.inicio = 0;
-			lista.fim = 0;
-			print(lista);
-		break;
-		default:
-			printf("goin' now");
-		break;	
-	}
-	return 0;
+//Operação de Impressão dos Elementos da Lista Linear Simplesmente Encadeada
+void imprime_lista_ecandeada(Nodo *N) {
+    Nodo *aux;
+    if(N == NULL)
+        printf("\n A lista está vazia!!");
+    else {
+        for(aux = N; aux != NULL; aux = aux->prox)
+            printf("\n%d", aux->dado);
+    }
+}
+//Função main
+int main() {
+    Nodo *MyList;
+    int menu, valor;
+    inicializa_lista(&MyList);
+    do {
+        printf("\n1. Insere no fim da Lista");
+        printf("\n2. Insere no inicio da Lista");
+        printf("\n3. Exclui do inicio da Lista");
+        printf("\n4. Exclui do final da Lista");
+        printf("\n5. Imprime Lista");
+        printf("\n6. Insere ordenado\n");
+        printf("\n7. sair\n");
+        scanf("%d", &menu);
+        switch(menu) {
+        case 1:
+            printf("\nInforme o valor a ser inserido no final da lista:");
+            scanf("%d", &valor);
+            insere_fim_lista(&MyList, valor);
+            break;
+        case 2:
+            printf("\nInforme o valor a ser inserido no inicio da lista:");
+            scanf("%d", &valor);
+            insere_inicio_lista(&MyList, valor);
+            break;
+        case 3:
+            if(remove_inicio_lista(&MyList, &valor) == 0)
+                printf("\nA lista está vazia!!");
+            else
+                printf("\nO valor excluido do inicio da lista foi: %d", valor);
+            break;
+
+        case 4:
+            if(remove_final_lista(&MyList, &valor) == 0)
+                printf("\nA lista está vazia!!");
+            else
+                printf("\nO valor excluido do inicio da lista foi: %d", valor);
+            break;
+        case 5:
+            imprime_lista_ecandeada(MyList);
+            break;
+        case 6:
+            printf("\nInforme o valor desejado a inserir na Lista\n");
+            scanf("%d", &valor);
+            insere_ordenado_lista(&MyList, valor);
+            break;
+        case 7:
+            printf("\n\n\nSaindo do programa!");
+            break;
+        default:
+            printf("\nOpcao Invalida!!!");
+        }
+    } while(menu != 7);
+    return 0;
 }
