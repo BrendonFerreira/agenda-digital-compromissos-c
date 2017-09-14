@@ -38,6 +38,23 @@ Nodo * Cria_Nodo() {
     return p;
 }
 
+Note_Date le_data(Note_Date data_compromisso){
+    printf("digite a data do compromisso:\n");
+    scanf("%d%d%d%d%d",data_compromisso.dia, data_compromisso.mes, data_compromisso.ano, data_compromisso.hora, data_compromisso.minuto);
+    return(data_compromisso);
+}
+
+Compromisso le_compromisso(Compromisso compromisso){
+    printf("digite a descrição do compromisso:\n");
+    scanf("%s", compromisso.descricao);
+    return(compromisso);
+}
+
+Compromisso le_dados(Note_Date data_compromisso, Compromisso compromisso){
+    le_data(data_compromisso);
+    le_compromisso(compromisso);
+}
+
 void printa_datas(Note_Date data_compromisso){
     printf("%d/%d/%d %d:%d", data_compromisso.dia, data_compromisso.mes, data_compromisso.ano, data_compromisso.hora, data_compromisso.minuto);
 }
