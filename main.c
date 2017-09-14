@@ -2,9 +2,23 @@
 #include<stdlib.h>
 #include<stdbool.h>
 
+
+typedef struct Date {
+    int minuto;
+    int hora;
+    int dia;
+    int mes;
+    int ano;
+} Note_Date;
+
+typedef struct NOTE {
+    char description[80];
+    Note_Date data_compromisso;
+} Compromisso;
+
 // Definição da Estrutura Lista Linear Simplemente Encadeada
-typedef struct Bloco {
-    int dado;
+typedef struct Bloco {  
+    Compromisso compromisso;
     struct Bloco *prox;
 } Nodo;
 //funções auxiliares
@@ -12,7 +26,7 @@ typedef struct Bloco {
 void inicializa_lista(Nodo **N) {
     *N = NULL;
 }
-//Aloca memória para um nodo da lista Linear Simplesmente Encadeada
+//Aloca memória par'MyLista um nodo da lista Linear Simplesmente Encadeada
 Nodo * Cria_Nodo() {
     Nodo *p;
     p = (Nodo *) malloc(sizeof(Nodo));
@@ -30,7 +44,7 @@ bool dado_esta_entre_os_nos( int dado, Nodo*aux1, Nodo*aux2 ){
 Node * pegar_o_ultimo_no( Nodo * aux ) {
     while(aux->prox != NULL)
         aux = aux->prox;
-    return aux
+    return aux;
 }
 
 //Operações que incidem sobre a estrutura
