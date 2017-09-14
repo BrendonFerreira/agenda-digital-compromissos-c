@@ -12,7 +12,7 @@ typedef struct Date {
 } Note_Date;
 
 typedef struct NOTE {
-    char description[80];
+    char descricao[80];
     Note_Date data_compromisso;
 } Compromisso;
 
@@ -37,11 +37,11 @@ Nodo * Cria_Nodo() {
     return p;
 }
 
-bool dado_esta_entre_os_nos( int dado, Nodo*aux1, Nodo*aux2 ){
-    return (dado >= aux1->dado) && (dado <= aux2->dado);
-}
+// bool dado_esta_entre_os_nos( int dado, Nodo*aux1, Nodo*aux2 ){
+//     return (dado >= aux1->dado) && (dado <= aux2->dado);
+// }
 
-Node * pegar_o_ultimo_no( Nodo * aux ) {
+Nodo * pegar_o_ultimo_no( Nodo * aux ) {
     while(aux->prox != NULL)
         aux = aux->prox;
     return aux;
@@ -49,10 +49,10 @@ Node * pegar_o_ultimo_no( Nodo * aux ) {
 
 //Operações que incidem sobre a estrutura
 //Operação de Inserção no Final da Lista
-void insere_fim_lista(Nodo **N, int dado) {
+void insere_fim_lista(Nodo **N, char dado[80]) {
     Nodo *novo, * aux;
     novo = Cria_Nodo( );
-    novo->dado = dado;
+    novo->compromisso.descricao = dado;
     novo->prox = NULL;
     if(*N == NULL)
         *N = novo;
@@ -62,48 +62,47 @@ void insere_fim_lista(Nodo **N, int dado) {
     }
 }
 //Operação de Inserção no Início da Lista
-void insere_inicio_lista(Nodo **N, int dado)
-{
+void insere_inicio_lista(Nodo **N, char dado[80]){
     Nodo *novo;
     novo = Cria_Nodo();
-    novo->dado = dado;
+    novo->compromisso.descricao = dado;
     novo->prox = *N;
     *N = novo;
 }
-//Operação de Inserção ordenada
-void insere_ordenado_lista(Nodo **N, int dado)
-{
-    Nodo *novo, *aux1, *aux2;
-    novo = Cria_Nodo();
-    novo->dado = dado;
-    if(*N == NULL) {//lista está vazia
-        novo->prox = NULL;
-        *N=novo;
-    }
-    else {
-        if(dado <= (*N)->dado) // insere no incio da lista
-            insere_inicio_lista(N, dado);
-        else {
-            for(aux1=*N; aux1->prox != NULL; aux1 = aux1->prox) {
-                aux2 = aux1->prox;
-                if( dado_esta_entre_os_nos( dado, aux1, aux2 ) ) { //insere no meio da lista
-                    aux1->prox = novo;
-                    novo->prox = aux2;
-                    break;
-                }
-            }
-            if(aux1->prox == NULL)//insere no final da lista
-                insere_fim_lista(N, dado);
-        }
-    }
-}
+// //Operação de Inserção ordenada
+// void insere_ordenado_lista(Nodo **N, int dado)
+// {
+//     Nodo *novo, *aux1, *aux2;
+//     novo = Cria_Nodo();
+//     novo->dado = dado;
+//     if(*N == NULL) {//lista está vazia
+//         novo->prox = NULL;
+//         *N=novo;
+//     }
+//     else {
+//         if(dado <= (*N)->dado) // insere no incio da lista
+//             insere_inicio_lista(N, dado);
+//         else {
+//             for(aux1=*N; aux1->prox != NULL; aux1 = aux1->prox) {
+//                 aux2 = aux1->prox;
+//                 if( dado_esta_entre_os_nos( dado, aux1, aux2 ) ) { //insere no meio da lista
+//                     aux1->prox = novo;
+//                     novo->prox = aux2;
+//                     break;
+//                 }
+//             }
+//             if(aux1->prox == NULL)//insere no final da lista
+//                 insere_fim_lista(N, dado);
+//         }
+//     }
+// }
 //Operação de Remoção do Início da Lista Linear Simplesmente Encadeada
-int remove_inicio_lista(Nodo **N, int *dado) {
+int remove_inicio_lista(Nodo **N, char *dado [80]) {
     Nodo *aux;
     if(*N == NULL) //verifica se a lista está vazia
         return 0;
     else {
-        *dado = (*N)->dado;
+        *dado = (*N)->compromisso.descricao;
         aux = (*N)->prox;
         free(*N);
         *N = aux;
@@ -112,7 +111,7 @@ int remove_inicio_lista(Nodo **N, int *dado) {
 }
 
 //Operação de Remoção do Início da Lista Linear Simplesmente Encadeada
-int remove_final_lista(Nodo **N, int *dado) {
+int remove_final_lista(Nodo **N, char *dado[80]) {
     Nodo *aux, *anterior;
     if(*N == NULL) //verifica se a lista está vazia
         return 0;
@@ -124,7 +123,7 @@ int remove_final_lista(Nodo **N, int *dado) {
             aux = aux->prox;
         }
 
-        *dado = aux->dado;
+        *dado = aux->compromisso.descricao;
         free(aux);
         anterior->prox = NULL;
 
@@ -140,7 +139,7 @@ void imprime_lista_ecandeada(Nodo *N) {
         printf("\n A lista está vazia!!");
     else {
         for(aux = N; aux != NULL; aux = aux->prox)
-            printf("\n%d", aux->dado);
+            printf("\n%s", aux->compromisso.descricao);
     }
 }
 //Função main
