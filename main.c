@@ -37,9 +37,44 @@ Nodo * Cria_Nodo() {
     return p;
 }
 
-// bool dado_esta_entre_os_nos( int dado, Nodo*aux1, Nodo*aux2 ){
-//     return (dado >= aux1->dado) && (dado <= aux2->dado);
-// }
+
+int compara_datas(Note_Date data1, Note_date data2){
+    if(data1->ano > data2->ano){
+        return 1;
+    }else if(data1->ano < data2->ano){
+        return -1;
+    }else{
+        if(data1->mes > data2->mes){
+            return 1;
+        }else if(data1->mes < data2->mes){
+            return -1;
+        }else{
+            if(data1->dia > data2->dia){
+                return 1;
+            }else if(data1->dia < data2->dia){
+                return -1;
+            }else{
+                if(data1->hora > data2->hora){
+                    return 1;
+                }else if(data1->hora < data2->hora){
+                    return -1;
+                }else{
+                    if(data1->minuto > data2->minuto){
+                        return 1;
+                    }else if(data1->minuto < data2->minuto){
+                        return -1;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+bool dado_esta_entre_os_nos( int dado, Nodo*aux1, Nodo*aux2 ){
+    return (dado >= aux1->dado) && (dado <= aux2->dado);
+}
+
 
 Nodo * pegar_o_ultimo_no( Nodo * aux ) {
     while(aux->prox != NULL)
