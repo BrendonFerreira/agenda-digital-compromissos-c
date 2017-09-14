@@ -37,6 +37,14 @@ Nodo * Cria_Nodo() {
     return p;
 }
 
+void printa_datas(Note_Date data_compromisso){
+    printf("%d/%d/%d %d:%d", data_compromisso.dia, data_compromisso.mes, data_compromisso.ano, data_compromisso.hora, data_compromisso.minuto);
+}
+
+void printa_compromisso(Compromisso comp){
+    printa_datas(comp.data_compromisso);
+    printf("%s", comp.descricao);
+}
 
 int compara_datas(Note_Date data1, Note_date data2){
     if(data1->ano > data2->ano){
