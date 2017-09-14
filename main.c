@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
+#include<string.h>
 
 
 typedef struct Date {
@@ -38,30 +39,30 @@ Nodo * Cria_Nodo() {
 }
 
 
-int compara_datas(Note_Date data1, Note_date data2){
-    if(data1->ano > data2->ano){
+int compara_datas(Note_Date data1, Note_Date data2){
+    if(data1.ano > data2.ano){
         return 1;
-    }else if(data1->ano < data2->ano){
+    }else if(data1.ano < data2.ano){
         return -1;
     }else{
-        if(data1->mes > data2->mes){
+        if(data1.mes > data2.mes){
             return 1;
-        }else if(data1->mes < data2->mes){
+        }else if(data1.mes < data2.mes){
             return -1;
         }else{
-            if(data1->dia > data2->dia){
+            if(data1.dia > data2.dia){
                 return 1;
-            }else if(data1->dia < data2->dia){
+            }else if(data1.dia < data2.dia){
                 return -1;
             }else{
-                if(data1->hora > data2->hora){
+                if(data1.hora > data2.hora){
                     return 1;
-                }else if(data1->hora < data2->hora){
+                }else if(data1.hora < data2.hora){
                     return -1;
                 }else{
-                    if(data1->minuto > data2->minuto){
+                    if(data1.minuto > data2.minuto){
                         return 1;
-                    }else if(data1->minuto < data2->minuto){
+                    }else if(data1.minuto < data2.minuto){
                         return -1;
                     }
                 }
@@ -71,8 +72,9 @@ int compara_datas(Note_Date data1, Note_date data2){
     return 0;
 }
 
-bool dado_esta_entre_os_nos( int dado, Nodo*aux1, Nodo*aux2 ){
-    return (dado >= aux1->dado) && (dado <= aux2->dado);
+bool dado_esta_entre_os_nos( Compromisso compromisso, Nodo*aux1, Nodo*aux2 ){
+    return ( compara_datas( compromisso.data_compromisso, aux1->compromisso.data_compromisso ) >= 0 ) 
+        && ( compara_datas( compromisso.data_compromisso, aux2->compromisso.data_compromisso ) <= 0 );
 }
 
 
@@ -84,10 +86,10 @@ Nodo * pegar_o_ultimo_no( Nodo * aux ) {
 
 //Operações que incidem sobre a estrutura
 //Operação de Inserção no Final da Lista
-void insere_fim_lista(Nodo **N, char dado[80]) {
+void insere_fim_lista(Nodo **N, Compromisso compromisso) {
     Nodo *novo, * aux;
     novo = Cria_Nodo( );
-    novo->compromisso.descricao = dado;
+    novo->compromisso = compromisso;
     novo->prox = NULL;
     if(*N == NULL)
         *N = novo;
@@ -97,40 +99,42 @@ void insere_fim_lista(Nodo **N, char dado[80]) {
     }
 }
 //Operação de Inserção no Início da Lista
-void insere_inicio_lista(Nodo **N, char dado[80]){
+void insere_inicio_lista(Nodo **N, Compromisso compromisso){
     Nodo *novo;
     novo = Cria_Nodo();
-    novo->compromisso.descricao = dado;
+    novo->compromisso = compromisso;
     novo->prox = *N;
     *N = novo;
 }
 // //Operação de Inserção ordenada
-// void insere_ordenado_lista(Nodo **N, int dado)
-// {
-//     Nodo *novo, *aux1, *aux2;
-//     novo = Cria_Nodo();
-//     novo->dado = dado;
-//     if(*N == NULL) {//lista está vazia
-//         novo->prox = NULL;
-//         *N=novo;
-//     }
-//     else {
-//         if(dado <= (*N)->dado) // insere no incio da lista
-//             insere_inicio_lista(N, dado);
-//         else {
-//             for(aux1=*N; aux1->prox != NULL; aux1 = aux1->prox) {
-//                 aux2 = aux1->prox;
-//                 if( dado_esta_entre_os_nos( dado, aux1, aux2 ) ) { //insere no meio da lista
-//                     aux1->prox = novo;
-//                     novo->prox = aux2;
-//                     break;
-//                 }
-//             }
-//             if(aux1->prox == NULL)//insere no final da lista
-//                 insere_fim_lista(N, dado);
-//         }
-//     }
-// }
+void insere_ordenado_lista(Nodo **N, Compromisso compromisso){
+    Nodo *novo, *aux1, *aux2;
+    novo = Cria_Nodo();
+
+
+
+    novo->compromisso = compromisso;
+    if(*N == NULL) {//lista está vazia
+        novo->prox = NULL;
+        *N=novo;
+    }
+    else {
+        if( compara_datas( compromisso.data_compromisso, ( *N )->compromisso.data_compromisso ) < 0 ) // insere no incio da lista
+            insere_inicio_lista(N, compromisso);
+        else {
+            for(aux1=*N; aux1->prox != NULL; aux1 = aux1->prox) {
+                aux2 = aux1->prox;
+                if( dado_esta_entre_os_nos( compromisso, aux1, aux2 ) ) { //insere no meio da lista
+                    aux1->prox = novo;
+                    novo->prox = aux2;
+                    break;
+                }
+            }
+            if(aux1->prox == NULL)//insere no final da lista
+                insere_fim_lista(N, compromisso);
+        }
+    }
+}
 //Operação de Remoção do Início da Lista Linear Simplesmente Encadeada
 int remove_inicio_lista(Nodo **N, char *dado [80]) {
     Nodo *aux;
@@ -195,12 +199,12 @@ int main() {
         case 1:
             printf("\nInforme o valor a ser inserido no final da lista:");
             scanf("%d", &valor);
-            insere_fim_lista(&MyList, valor);
+            // insere_fim_lista(&MyList, valor);
             break;
         case 2:
             printf("\nInforme o valor a ser inserido no inicio da lista:");
             scanf("%d", &valor);
-            insere_inicio_lista(&MyList, valor);
+            // insere_inicio_lista(&MyList, valor);
             break;
         case 3:
             if(remove_inicio_lista(&MyList, &valor) == 0)
@@ -220,8 +224,19 @@ int main() {
             break;
         case 6:
             printf("\nInforme o valor desejado a inserir na Lista\n");
-            scanf("%d", &valor);
-            insere_ordenado_lista(&MyList, valor);
+            Compromisso compromissoTemp;
+
+            char my_text [80] = "TENHO Q COPIAR ESSA MERDA"; 
+
+            strcpy( compromissoTemp.descricao, my_text );
+            compromissoTemp.data_compromisso.dia = 25;
+            compromissoTemp.data_compromisso.mes = 4;
+            compromissoTemp.data_compromisso.ano = 1998;
+            compromissoTemp.data_compromisso.hora = 23;
+            compromissoTemp.data_compromisso.hora = 59;
+            
+            
+            insere_ordenado_lista(&MyList, compromissoTemp);
             break;
         case 7:
             printf("\n\n\nSaindo do programa!");
