@@ -40,8 +40,8 @@ Nodo * Cria_Nodo() {
 
 Note_Date le_data(){
     Note_Date data_compromisso;
-    printf("digite a data do compromisso:\n");
-    scanf("%d%d%d%d%d",data_compromisso.dia, data_compromisso.mes, data_compromisso.ano, data_compromisso.hora, data_compromisso.minuto);
+    printf("digite a data do compromisso: dd/mm/yyyy hh:mm\n");
+    scanf("%d/%d/%d %d:%d", &data_compromisso.dia, &data_compromisso.mes, &data_compromisso.ano, &data_compromisso.hora, &data_compromisso.minuto);
     return(data_compromisso);
 }
 
@@ -54,7 +54,7 @@ Compromisso le_compromisso(){
 
 Compromisso le_dados(){
     Compromisso compromisso = le_compromisso();
-    compromisso.data_compromisso = le_data(data_compromisso);
+    compromisso.data_compromisso = le_data();
     return compromisso;
 }
 
@@ -206,12 +206,13 @@ void imprime_lista_ecandeada(Nodo *N) {
         printf("\n A lista está vazia!!");
     else {
         for(aux = N; aux != NULL; aux = aux->prox)
-            printf("\n%s", aux->compromisso.descricao);
+            printf("%s", aux->compromisso.descricao);
     }
 }
 //Função main
 int main() {
     Nodo *MyList;
+    Compromisso novo_compromisso;
     int menu, valor;
     inicializa_lista(&MyList);
     do {
@@ -225,7 +226,7 @@ int main() {
         scanf("%d", &menu);
         switch(menu) {
             case 1:
-                Compromisso novo_compromisso = le_compromisso();
+                novo_compromisso = le_dados();
                 insere_ordenado_lista( &MyList, novo_compromisso );
                 break;
             case 2:
