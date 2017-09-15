@@ -38,21 +38,24 @@ Nodo * Cria_Nodo() {
     return p;
 }
 
-Note_Date le_data(Note_Date data_compromisso){
+Note_Date le_data(){
+    Note_Date data_compromisso;
     printf("digite a data do compromisso:\n");
     scanf("%d%d%d%d%d",data_compromisso.dia, data_compromisso.mes, data_compromisso.ano, data_compromisso.hora, data_compromisso.minuto);
     return(data_compromisso);
 }
 
-Compromisso le_compromisso(Compromisso compromisso){
+Compromisso le_compromisso(){
+    Compromisso compromisso;
     printf("digite a descrição do compromisso:\n");
     scanf("%s", compromisso.descricao);
     return(compromisso);
 }
 
-Compromisso le_dados(Note_Date data_compromisso, Compromisso compromisso){
-    le_data(data_compromisso);
-    le_compromisso(compromisso);
+Compromisso le_dados(){
+    Compromisso compromisso = le_compromisso();
+    compromisso.data_compromisso = le_data(data_compromisso);
+    return compromisso;
 }
 
 void printa_datas(Note_Date data_compromisso){
@@ -212,63 +215,31 @@ int main() {
     int menu, valor;
     inicializa_lista(&MyList);
     do {
-        printf("\n1. Insere no fim da Lista");
-        printf("\n2. Insere no inicio da Lista");
-        printf("\n3. Exclui do inicio da Lista");
-        printf("\n4. Exclui do final da Lista");
-        printf("\n5. Imprime Lista");
-        printf("\n6. Insere ordenado\n");
-        printf("\n7. sair\n");
+
+
+        printf("\n1. Novo compromisso");
+        printf("\n2. Cancelar compromisso");
+        printf("\n3. Listar compromissos");
+        printf("\n4. sair\n");
+
         scanf("%d", &menu);
         switch(menu) {
-        case 1:
-            printf("\nInforme o valor a ser inserido no final da lista:");
-            scanf("%d", &valor);
-            // insere_fim_lista(&MyList, valor);
-            break;
-        case 2:
-            printf("\nInforme o valor a ser inserido no inicio da lista:");
-            scanf("%d", &valor);
-            // insere_inicio_lista(&MyList, valor);
-            break;
-        case 3:
-            if(remove_inicio_lista(&MyList, &valor) == 0)
-                printf("\nA lista está vazia!!");
-            else
-                printf("\nO valor excluido do inicio da lista foi: %d", valor);
-            break;
-
-        case 4:
-            if(remove_final_lista(&MyList, &valor) == 0)
-                printf("\nA lista está vazia!!");
-            else
-                printf("\nO valor excluido do inicio da lista foi: %d", valor);
-            break;
-        case 5:
-            imprime_lista_ecandeada(MyList);
-            break;
-        case 6:
-            printf("\nInforme o valor desejado a inserir na Lista\n");
-            Compromisso compromissoTemp;
-
-            char my_text [80] = "TENHO Q COPIAR ESSA MERDA"; 
-
-            strcpy( compromissoTemp.descricao, my_text );
-            compromissoTemp.data_compromisso.dia = 25;
-            compromissoTemp.data_compromisso.mes = 4;
-            compromissoTemp.data_compromisso.ano = 1998;
-            compromissoTemp.data_compromisso.hora = 23;
-            compromissoTemp.data_compromisso.hora = 59;
-            
-            
-            insere_ordenado_lista(&MyList, compromissoTemp);
-            break;
-        case 7:
-            printf("\n\n\nSaindo do programa!");
-            break;
-        default:
-            printf("\nOpcao Invalida!!!");
+            case 1:
+                Compromisso novo_compromisso = le_compromisso();
+                insere_ordenado_lista( &MyList, novo_compromisso );
+                break;
+            case 2:
+                // Fazer função para cancelar compromisso
+                break;
+            case 3:
+                imprime_lista_ecandeada(MyList);
+                break;
+            case 4:
+                printf("\n\n\nSaindo do programa!");
+                break;
+            default:
+                printf("\nOpcao Invalida!!!");
         }
-    } while(menu != 7);
+    } while(menu != 4);
     return 0;
 }
