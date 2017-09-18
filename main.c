@@ -48,12 +48,14 @@ Note_Date le_data(){
 Compromisso le_compromisso(){
     Compromisso compromisso;
     printf("digite a descrição do compromisso:\n");
-    scanf("%s", compromisso.descricao);
+    fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
+    fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
     return(compromisso);
 }
 
 Compromisso le_dados(){
-    Compromisso compromisso = le_compromisso();
+    Compromisso compromisso;
+    compromisso = le_compromisso();
     compromisso.data_compromisso = le_data();
     return compromisso;
 }
@@ -205,8 +207,10 @@ void imprime_lista_ecandeada(Nodo *N) {
     if(N == NULL)
         printf("\n A lista está vazia!!");
     else {
-        for(aux = N; aux != NULL; aux = aux->prox)
-            printf("%s", aux->compromisso.descricao);
+        for(aux = N; aux != NULL; aux = aux->prox) { 
+            printa_compromisso( aux->compromisso );
+            printf("\n");
+        }
     }
 }
 //Função main
