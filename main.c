@@ -48,18 +48,20 @@ Note_Date le_data(){
 Compromisso le_compromisso(){
     Compromisso compromisso;
     printf("digite a descrição do compromisso:\n");
-    scanf("%s", compromisso.descricao);
+    fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
+    // fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
     return(compromisso);
 }
 
 Compromisso le_dados(){
-    Compromisso compromisso = le_compromisso();
+    Compromisso compromisso;
+    compromisso = le_compromisso();
     compromisso.data_compromisso = le_data();
     return compromisso;
 }
 
 void printa_datas(Note_Date data_compromisso){
-    printf("%d/%d/%d %d:%d", data_compromisso.dia, data_compromisso.mes, data_compromisso.ano, data_compromisso.hora, data_compromisso.minuto);
+    printf("%d/%d/%d %d:%d - ", data_compromisso.dia, data_compromisso.mes, data_compromisso.ano, data_compromisso.hora, data_compromisso.minuto);
 }
 
 void printa_compromisso(Compromisso comp){
@@ -205,10 +207,12 @@ void imprime_lista_ecandeada(Nodo *N) {
     if(N == NULL)
         printf("\n A lista está vazia!!");
     else {
-        for(aux = N; aux != NULL; aux = aux->prox)
-            printf("%s", aux->compromisso.descricao);
+        for(aux = N; aux != NULL; aux = aux->prox) { 
+            printa_compromisso( aux->compromisso );
+            printf("\n");
+        }
     }
-}
+} 
 //Função main
 int main() {
     Nodo *MyList;
@@ -223,7 +227,7 @@ int main() {
         printf("\n3. Listar compromissos");
         printf("\n4. sair\n");
 
-        scanf("%d", &menu);
+        scanf("%d%*c", &menu);
         switch(menu) {
             case 1:
                 novo_compromisso = le_dados();
