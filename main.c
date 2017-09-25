@@ -49,7 +49,7 @@ Compromisso le_compromisso(){
     Compromisso compromisso;
     printf("digite a descrição do compromisso:\n");
     fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
-    fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
+    // fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
     return(compromisso);
 }
 
@@ -61,7 +61,7 @@ Compromisso le_dados(){
 }
 
 void printa_datas(Note_Date data_compromisso){
-    printf("%d/%d/%d %d:%d", data_compromisso.dia, data_compromisso.mes, data_compromisso.ano, data_compromisso.hora, data_compromisso.minuto);
+    printf("%d/%d/%d %d:%d - ", data_compromisso.dia, data_compromisso.mes, data_compromisso.ano, data_compromisso.hora, data_compromisso.minuto);
 }
 
 void printa_compromisso(Compromisso comp){
@@ -212,7 +212,7 @@ void imprime_lista_ecandeada(Nodo *N) {
             printf("\n");
         }
     }
-}
+} 
 //Função main
 int main() {
     Nodo *MyList;
@@ -227,7 +227,7 @@ int main() {
         printf("\n3. Listar compromissos");
         printf("\n4. sair\n");
 
-        scanf("%d", &menu);
+        scanf("%d%*c", &menu);
         switch(menu) {
             case 1:
                 novo_compromisso = le_dados();
