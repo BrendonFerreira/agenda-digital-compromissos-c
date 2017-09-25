@@ -49,7 +49,6 @@ Compromisso le_compromisso(){
     Compromisso compromisso;
     printf("digite a descrição do compromisso:\n");
     fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
-    // fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
     return(compromisso);
 }
 
@@ -141,8 +140,6 @@ void insere_ordenado_lista(Nodo **N, Compromisso compromisso){
     Nodo *novo, *aux1, *aux2;
     novo = Cria_Nodo();
 
-
-
     novo->compromisso = compromisso;
     if(*N == NULL) {//lista está vazia
         novo->prox = NULL;
@@ -200,6 +197,21 @@ int remove_final_lista(Nodo **N, char *dado[80]) {
     return 1;
 }
 
+void grava_lista( Nodo * N ) {
+    Nodo *aux, *anterior;
+    FILE * fp = fopen( "agenda.dat", "w" );
+    if( fp == NULL  ){
+        printf( "VAITOMANOCU" );
+    } else {
+        aux = N;
+        while(aux->prox != NULL) {
+            aux = aux->prox;
+            fwrite( &aux, sizeof( aux ), 1, fp );
+        }
+    }
+    fclose( fp );
+}
+
 
 //Operação de Impressão dos Elementos da Lista Linear Simplesmente Encadeada
 void imprime_lista_ecandeada(Nodo *N) {
@@ -232,6 +244,7 @@ int main() {
             case 1:
                 novo_compromisso = le_dados();
                 insere_ordenado_lista( &MyList, novo_compromisso );
+                grava_lista( MyList );
                 break;
             case 2:
                 // Fazer função para cancelar compromisso
