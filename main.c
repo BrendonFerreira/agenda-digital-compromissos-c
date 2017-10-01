@@ -17,22 +17,22 @@ typedef struct NOTE {
     Note_Date data_compromisso;
 } Compromisso;
 
-// DefiniÃ§Ã£o da Estrutura Lista Linear Simplemente Encadeada
+// Definição da Estrutura Lista Linear Simplemente Encadeada
 typedef struct Bloco {  
     Compromisso compromisso;
     struct Bloco *prox;
 } Nodo;
-//funÃ§Ãµes auxiliares
+
 //Inicializa a Lista Linear Simplesmente Encadeada
 void inicializa_lista(Nodo **N) {
     *N = NULL;
 }
-//Aloca memÃ³ria par'MyLista um nodo da lista Linear Simplesmente Encadeada
+
 Nodo * Cria_Nodo() {
     Nodo *p;
     p = (Nodo *) malloc(sizeof(Nodo));
     if(!p) {
-        printf("Problema de alocaÃ§Ã£o");
+        printf("Problema de alocação");
         exit(0);
     }
     return p;
@@ -47,9 +47,8 @@ Note_Date le_data(){
 
 Compromisso le_compromisso(){
     Compromisso compromisso;
-    printf("digite a descriÃ§Ã£o do compromisso:\n");
+    printf("digite a descricao do compromisso:\n");
     fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
-    // fgets(compromisso.descricao, sizeof( compromisso.descricao ), stdin );
     return(compromisso);
 }
 
@@ -114,8 +113,6 @@ Nodo * pegar_o_ultimo_no( Nodo * aux ) {
     return aux;
 }
 
-//OperaÃ§Ãµes que incidem sobre a estrutura
-//OperaÃ§Ã£o de InserÃ§Ã£o no Final da Lista
 void insere_fim_lista(Nodo **N, Compromisso compromisso) {
     Nodo *novo, * aux;
     novo = Cria_Nodo( );
@@ -128,7 +125,6 @@ void insere_fim_lista(Nodo **N, Compromisso compromisso) {
         aux->prox = novo;
     }
 }
-//OperaÃ§Ã£o de InserÃ§Ã£o no InÃ­cio da Lista
 void insere_inicio_lista(Nodo **N, Compromisso compromisso){
     Nodo *novo;
     novo = Cria_Nodo();
@@ -136,37 +132,35 @@ void insere_inicio_lista(Nodo **N, Compromisso compromisso){
     novo->prox = *N;
     *N = novo;
 }
-//OperaÃ§Ã£o de InserÃ§Ã£o ordenada
 void insere_ordenado_lista(Nodo **N, Compromisso compromisso){
     Nodo *novo, *aux1, *aux2;
     novo = Cria_Nodo();
     novo->compromisso = compromisso;
-    if(*N == NULL) {//lista estÃ¡ vazia
+    if(*N == NULL) {
         novo->prox = NULL;
         *N=novo;
     }
     else {
-        if( compara_datas( compromisso.data_compromisso, ( *N )->compromisso.data_compromisso ) < 0 ) // insere no incio da lista
+        if( compara_datas( compromisso.data_compromisso, ( *N )->compromisso.data_compromisso ) < 0 )
             insere_inicio_lista(N, compromisso);
         else {
             for(aux1=*N; aux1->prox != NULL; aux1 = aux1->prox) {
                 aux2 = aux1->prox;
-                if( dado_esta_entre_os_nos( compromisso, aux1, aux2 ) ) { //insere no meio da lista
+                if( dado_esta_entre_os_nos( compromisso, aux1, aux2 ) ) {
                     aux1->prox = novo;
                     novo->prox = aux2;
                     break;
                 }
             }
-            if(aux1->prox == NULL)//insere no final da lista
+            if(aux1->prox == NULL)
                 insere_fim_lista(N, compromisso);
         }
     }
 }
 
-//OperaÃ§Ã£o de RemoÃ§Ã£o do InÃ­cio da Lista Linear Simplesmente Encadeada
 int remove_inicio_lista(Nodo **N, char *dado [80]) {
     Nodo *aux;
-    if(*N == NULL) //verifica se a lista estÃ¡ vazia
+    if(*N == NULL)
         return 0;
     else {
         *dado = (*N)->compromisso.descricao;
@@ -177,10 +171,9 @@ int remove_inicio_lista(Nodo **N, char *dado [80]) {
     return 1;
 }
 
-//OperaÃ§Ã£o de RemoÃ§Ã£o do InÃ­cio da Lista Linear Simplesmente Encadeada
 int remove_final_lista(Nodo **N, char *dado[80]) {
     Nodo *aux, *anterior;
-    if(*N == NULL) //verifica se a lista estÃ¡ vazia
+    if(*N == NULL)
         return 0;
     else {
 
@@ -198,54 +191,62 @@ int remove_final_lista(Nodo **N, char *dado[80]) {
     return 1;
 }
 
-//OperaÃ§Ã£o de ImpressÃ£o dos Elementos da Lista Linear Simplesmente Encadeada
 void imprime_lista_ecandeada(Nodo *N) {
     Nodo *aux;
     if(N == NULL)
-        printf("\n A lista estÃ¡ vazia!!");
+        printf("\n A lista esta vazia!!");
     else {
         for(aux = N; aux != NULL; aux = aux->prox) { 
             printa_compromisso( aux->compromisso );
-            printf("\n");
         }
     }
 } 
 
-void salva_compromisso(Compromisso compromisso){
-	FILE *fp;
-	fp = fopen("agenda.dat", "w+");
+void salva_compromissos(Nodo **N){
+	Nodo *aux;
+	FILE *fp;	
+	fp = fopen("agenda.dat", "w");
 	if(fp == NULL){
 		printf("ERRO: arquivo 'agenda.dat' nao existe");
 	}
-	fwrite(&compromisso, sizeof(Compromisso), 1, fp);
+	aux = *N;
+	while(aux != NULL) {
+		fwrite(&(aux->compromisso), sizeof(Compromisso), 1, fp);
+        aux = aux->prox;
+    }
 	fclose(fp);
 }
 
-void imprime_agenda(Compromisso compromisso){
+void le_agenda(Nodo **N){
+	Compromisso compromisso;
 	FILE *fp;
-	fp = fopen("agenda.dat", "w+");
+	fp = fopen("agenda.dat", "r");
 	if(fp == NULL){
-		printf("ERRO: arquivo 'agenda.dat' nao existe");
+		printf("ERRO: arquivo 'agenda.dat' nao existe\n");
 	}
-	fread(&compromisso, sizeof(Compromisso), 1, fp);
-	printa_compromisso(compromisso);
+	printf("comecando a ler\n");
+	while(fread(&compromisso, sizeof(Compromisso), 1, fp)){
+		insere_ordenado_lista(N, compromisso);
+		printf("inserindo\n");
+	};
 	fclose(fp);             
 }
 
-//FunÃ§Ã£o main
 int main(){
-    Nodo *MyList;
+    Nodo *MyList = NULL;
     Compromisso novo_compromisso;
     int menu, valor;
     int choice;
     FILE *fp;
     inicializa_lista(&MyList);
+//    le_agenda(&MyList);
     do {
         printf("\n1. Novo compromisso");
         printf("\n2. Cancelar compromisso");
         printf("\n3. Listar compromissos");
-        printf("\n4. Listar compromissos da agenda.dat");
-        printf("\n5. sair\n");
+        printf("\n4. Salva na agenda.dat");
+        printf("\n5. Le a agenda.dat");
+        printf("\n6. sair\n");
         scanf("%d%*c", &menu);
         switch(menu) {
             case 1:
@@ -265,20 +266,23 @@ int main(){
 				}
                 break;
             case 2:
-                // Fazer funÃ§Ã£o para cancelar compromisso
+                // Fazer funcao para cancelar compromisso
                 break;
             case 3:
                 imprime_lista_ecandeada(MyList);
 				break;
 			case 4:
-				imprime_agenda(novo_compromisso);	
+				salva_compromissos(&MyList);
 				break;
-            case 5:
+			case 5:
+				le_agenda(&MyList);
+				break;
+            case 6:
                 printf("\n\n\nSaindo do programa!");
                 break;
             default:
                 printf("\nOpcao Invalida!!!");
         }
-    } while(menu != 5);
+    } while(menu != 6);
     return 0;
 }
