@@ -17,11 +17,13 @@ typedef struct NOTE {
     Note_Date data_compromisso;
 } Compromisso;
 
+// DefiniÃ§Ã£o da Estrutura Lista Linear Simplemente Encadeada
 typedef struct Bloco {  
     Compromisso compromisso;
     struct Bloco *prox;
 } Nodo;
 
+//Inicializa a Lista Linear Simplesmente Encadeada
 void inicializa_lista(Nodo **N) {
     *N = NULL;
 }
@@ -30,7 +32,7 @@ Nodo * Cria_Nodo() {
     Nodo *p;
     p = (Nodo *) malloc(sizeof(Nodo));
     if(!p) {
-        printf("Problema de alocação");
+        printf("Problema de alocaÃ§Ã£o");
         exit(0);
     }
     return p;
@@ -123,7 +125,6 @@ void insere_fim_lista(Nodo **N, Compromisso compromisso) {
         aux->prox = novo;
     }
 }
-
 void insere_inicio_lista(Nodo **N, Compromisso compromisso){
     Nodo *novo;
     novo = Cria_Nodo();
@@ -131,7 +132,6 @@ void insere_inicio_lista(Nodo **N, Compromisso compromisso){
     novo->prox = *N;
     *N = novo;
 }
-
 void insere_ordenado_lista(Nodo **N, Compromisso compromisso){
     Nodo *novo, *aux1, *aux2;
     novo = Cria_Nodo();
@@ -194,7 +194,7 @@ int remove_final_lista(Nodo **N, char *dado[80]) {
 void imprime_lista_ecandeada(Nodo *N) {
     Nodo *aux;
     if(N == NULL)
-        printf("\n A lista está vazia!!");
+        printf("\n A lista esta vazia!!");
     else {
         for(aux = N; aux != NULL; aux = aux->prox) { 
             printa_compromisso( aux->compromisso );
@@ -252,9 +252,21 @@ int main(){
             case 1:
                 novo_compromisso = le_dados();
                 insere_ordenado_lista( &MyList, novo_compromisso );
+				printf("Deseja salvar compromisso em um arquivo? 1-sim/2-nao\n");
+				scanf("%d", &choice);
+				switch(choice){
+					case 1:
+						salva_compromisso(novo_compromisso);
+						break;
+					case 2:
+						imprime_agenda(novo_compromisso);
+						break;
+					default:
+						printf("\nOpcao Invalida!!!");
+				}
                 break;
             case 2:
-                // Fazer função para cancelar compromisso
+                // Fazer funcao para cancelar compromisso
                 break;
             case 3:
                 imprime_lista_ecandeada(MyList);
