@@ -19,7 +19,7 @@ typedef struct NOTE {
     Note_Date data_compromisso;
 } Compromisso;
 
-// DefiniÃ§Ã£o da Estrutura Lista Linear Simplemente Encadeada
+// Definicao da Estrutura Lista Linear Simplemente Encadeada
 typedef struct Bloco {  
     Compromisso compromisso;
     struct Bloco *prox;
