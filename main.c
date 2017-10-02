@@ -245,18 +245,63 @@ int strcicmp(char const *a, char const *b) {
     }
 }
 
+
+
 void buscar_compromisso( Nodo * N, char pesquisa [80]  ) {
 
     Nodo *aux;
+    char * found;
+    int found_counter = 0;
+
     if(N == NULL)
         printf("\n A lista estÃ¡ vazia!!");
     else {
         for(aux = N; aux != NULL; aux = aux->prox) { 
-            printf( "%d", strcicmp( pesquisa, aux->compromisso.descricao ) );
-            printf("\n");
+            found = strstr( aux->compromisso.descricao, pesquisa ); /* should return 0x18 */
+            int index = found - aux->compromisso.descricao;          /* index is 8 */
+            printf( "\n -----> %d\n", index );
+            if( index > -1 ) {
+                
+                printa_compromisso( aux->compromisso );
+                found_counter++;
+            }
         }
     }
+
+    if( found_counter == 0 ){
+        printf("\nNenhum compromisso encontrado.\n");
+    }
 }
+
+void cancelar_compromisso( Nodo ** N, char pesquisa [80]  ) {
+    
+    Nodo *aux;
+    char * found;
+    int found_counter = 0;
+
+    if(N == NULL)
+        printf("\n A lista estÃ¡ vazia!!");
+    else {
+        for(aux = *N; aux != NULL; aux = aux->prox) { 
+            found = strstr( aux->compromisso.descricao, pesquisa ); /* should return 0x18 */
+            int index = found - aux->compromisso.descricao;          /* index is 8 */
+            printf( "\n -----> %d\n", index );
+            if( index > -1 ) {
+                strcpy( aux->compromisso.descricao, "Compromisso cancelado" );
+                found_counter++;
+            }
+        }
+    }
+
+    if( found_counter == 0 ){
+        printf("\nNenhum compromisso encontrado.\n");
+    }
+
+    else {
+        printf("\n%d Compromissos cancelados\n", found_counter);
+    }
+}
+
 
 int main(){
     Nodo *MyList = NULL;
@@ -274,8 +319,8 @@ int main(){
         printf("\n3. Listar compromissos");
         printf("\n4. Salva na agenda.dat");
         // printf("\n5. Le a agenda.dat");
-        printf("\n5. sair\n");
         printf("\n6. Pesquisar por compromisso");
+        printf("\n5. sair\n");
         scanf("%d%*c", &menu);
         switch(menu) {
             case 1:
@@ -284,6 +329,10 @@ int main(){
                 break;
             case 2:
                 // Fazer funcao para cancelar compromisso
+
+                printf("Pesquise o compromisso:");
+                scanf ("%[^\n]%*c", pesquisa);
+                cancelar_compromisso( &MyList, pesquisa );
                 break;
             case 3:
                 imprime_lista_ecandeada(MyList);
@@ -298,8 +347,8 @@ int main(){
                 printf("\n\n\nSaindo do programa!");
                 break;
             case 6: 
-                // fflush( stdin );
-                fgets( pesquisa, 80, stdin );
+                printf("Pesquise o compromisso:");
+                scanf ("%[^\n]%*c", pesquisa);
                 buscar_compromisso( MyList, pesquisa );
                 break;
             default:
