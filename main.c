@@ -19,7 +19,7 @@ typedef struct NOTE {
     Note_Date data_compromisso;
 } Compromisso;
 
-// Definição da Estrutura Lista Linear Simplemente Encadeada
+// DefiniÃ§Ã£o da Estrutura Lista Linear Simplemente Encadeada
 typedef struct Bloco {  
     Compromisso compromisso;
     struct Bloco *prox;
@@ -34,7 +34,7 @@ Nodo * Cria_Nodo() {
     Nodo *p;
     p = (Nodo *) malloc(sizeof(Nodo));
     if(!p) {
-        printf("Problema de alocação");
+        printf("Problema de alocaÃ§Ã£o");
         exit(0);
     }
     return p;
@@ -242,7 +242,7 @@ int strcicmp(char const *a, char const *b) {
         int d = tolower(*a) - tolower(*b);
         if (d != 0 || !*a)
             return d;
-    }
+	}
 }
 
 
@@ -254,12 +254,12 @@ void buscar_compromisso( Nodo * N, char pesquisa [80]  ) {
     int found_counter = 0;
 
     if(N == NULL)
-        printf("\n A lista estÃ¡ vazia!!");
+        printf("\n A lista esta vazia!!");
     else {
         for(aux = N; aux != NULL; aux = aux->prox) { 
             found = strstr( aux->compromisso.descricao, pesquisa ); /* should return 0x18 */
             int index = found - aux->compromisso.descricao;          /* index is 8 */
-            printf( "\n -----> %d\n", index );
+//            printf( "\n -----> %d\n", index );
             if( index > -1 ) {
                 
                 printa_compromisso( aux->compromisso );
@@ -273,6 +273,74 @@ void buscar_compromisso( Nodo * N, char pesquisa [80]  ) {
     }
 }
 
+void buscar_data(Nodo **N){
+	Note_Date data_pesquisa;
+	Nodo *aux;
+    char *found_dia, *found_mes, *found_ano;
+    int found_counter = 0;
+    if(N == NULL)
+        printf("\n A lista esta vazia!!");
+    else {
+    	printf("Digite uma data dd/mm/yyyy\n");
+		scanf("%d/%d/%d", &data_pesquisa.dia, &data_pesquisa.mes, &data_pesquisa.ano);
+        for(aux = *N; aux != NULL; aux = aux->prox) { 
+            if(aux->compromisso.data_compromisso.dia == data_pesquisa.dia && aux->compromisso.data_compromisso.mes == data_pesquisa.mes && aux->compromisso.data_compromisso.ano == data_pesquisa.ano){
+				found_dia = aux->compromisso.data_compromisso.dia;
+				found_mes = aux->compromisso.data_compromisso.mes;
+				found_ano = aux->compromisso.data_compromisso.ano;
+			}
+            int index_dia = found_dia - aux->compromisso.data_compromisso.dia;          /* index is 8 */
+            int index_mes = found_mes - aux->compromisso.data_compromisso.mes;
+            int index_ano = found_ano - aux->compromisso.data_compromisso.ano;
+            // printf( "\n -----> %d\n", index );
+            if( index_dia > -1 && index_dia < 3000 && index_mes > -1 && index_mes < 3000 && index_ano > -1 && index_ano < 3000 ) {
+                printa_compromisso( aux->compromisso );
+                found_counter++;
+            }
+        }
+    
+		if( found_counter == 0 ){
+	        printf("\nNenhum compromisso encontrado.\n");
+	    }	
+	}
+}
+
+void cancela_data( Nodo **N ){
+	Note_Date data_pesquisa;
+	Nodo *aux;
+    char *found_dia, *found_mes, *found_ano;
+    int found_counter = 0;
+    if(N == NULL)
+        printf("\n A lista esta vazia!!");
+    else {
+    	printf("Digite uma data dd/mm/yyyy\n");
+		scanf("%d/%d/%d", &data_pesquisa.dia, &data_pesquisa.mes, &data_pesquisa.ano);
+        for(aux = *N; aux != NULL; aux = aux->prox) { 
+            if(aux->compromisso.data_compromisso.dia == data_pesquisa.dia && aux->compromisso.data_compromisso.mes == data_pesquisa.mes && aux->compromisso.data_compromisso.ano == data_pesquisa.ano){
+				found_dia = aux->compromisso.data_compromisso.dia;
+				found_mes = aux->compromisso.data_compromisso.mes;
+				found_ano = aux->compromisso.data_compromisso.ano;
+			}
+            int index_dia = found_dia - aux->compromisso.data_compromisso.dia;          /* index is 8 */
+            int index_mes = found_mes - aux->compromisso.data_compromisso.mes;
+            int index_ano = found_ano - aux->compromisso.data_compromisso.ano;
+            // printf( "\n -----> %d\n", index );
+            if( index_dia > -1 && index_dia < 3000 && index_mes > -1 && index_mes < 3000 && index_ano > -1 && index_ano < 3000 ) {
+                strcpy( aux->compromisso.descricao, "Compromisso cancelado\n" );
+                found_counter++;
+            }
+        }
+    }
+
+    if( found_counter == 0 ){
+        printf("\nNenhum compromisso encontrado.\n");
+    }
+
+    else {
+        printf("\n%d Compromissos cancelados\n", found_counter);
+    }
+}
+
 void cancelar_compromisso( Nodo ** N, char pesquisa [80]  ) {
     
     Nodo *aux;
@@ -280,7 +348,7 @@ void cancelar_compromisso( Nodo ** N, char pesquisa [80]  ) {
     int found_counter = 0;
 
     if(N == NULL)
-        printf("\n A lista estÃ¡ vazia!!");
+        printf("\n A lista esta vazia!!");
     else {
         for(aux = *N; aux != NULL; aux = aux->prox) { 
             found = strstr( aux->compromisso.descricao, pesquisa ); /* should return 0x18 */
@@ -311,16 +379,18 @@ int main(){
     int choice;
     FILE *fp;
     inicializa_lista(&MyList);
-    le_agenda(&MyList);
+//    le_agenda(&MyList);
 
     do {
         printf("\n1. Novo compromisso");
-        printf("\n2. Cancelar compromisso");
-        printf("\n3. Listar compromissos");
-        printf("\n4. Salva na agenda.dat");
-        // printf("\n5. Le a agenda.dat");
-        printf("\n6. Pesquisar por compromisso");
-        printf("\n5. sair\n");
+        printf("\n2. Cancelar compromisso (pela data)");
+        printf("\n3. Cancelar compromisso (pela descricao)");
+        printf("\n4. Listar compromissos");
+        printf("\n5. Salva na agenda.dat");
+        printf("\n6. Le a agenda.dat");
+        printf("\n7. Pesquisar por compromisso (pela data)");
+        printf("\n8. Pesquisar por compromisso (pela descricao)");
+        printf("\n9. sair\n");
         scanf("%d%*c", &menu);
         switch(menu) {
             case 1:
@@ -328,32 +398,36 @@ int main(){
                 insere_ordenado_lista( &MyList, novo_compromisso );
                 break;
             case 2:
-                // Fazer funcao para cancelar compromisso
-
+            	cancela_data(&MyList);
+				break;
+			case 3: 
                 printf("Pesquise o compromisso:");
-                scanf ("%[^\n]%*c", pesquisa);
-                cancelar_compromisso( &MyList, pesquisa );
+	         	scanf ("%[^\n]%*c", pesquisa);
+	            cancelar_compromisso( &MyList, pesquisa );
                 break;
-            case 3:
+            case 4:
                 imprime_lista_ecandeada(MyList);
 				break;
-			case 4:
+			case 5:
 				salva_compromissos(&MyList);
 				break;
-			// case 5:
-			// 	le_agenda(&MyList);
-			// 	break;
-            case 5:
-                printf("\n\n\nSaindo do programa!");
+			case 6:
+				le_agenda(&MyList);
+				break;
+            case 7:
+               	buscar_data(&MyList);
                 break;
-            case 6: 
+            case 8: 
                 printf("Pesquise o compromisso:");
-                scanf ("%[^\n]%*c", pesquisa);
-                buscar_compromisso( MyList, pesquisa );
+	            scanf ("%[^\n]%*c", pesquisa);
+	            buscar_compromisso( MyList, pesquisa );
+                break;
+            case 9: 
+                printf("\n\n\nSaindo do programa!");
                 break;
             default:
                 printf("\nOpcao Invalida!!!");
         }
-    } while(menu != 5);
+    } while(menu != 9);
     return 0;
 }
