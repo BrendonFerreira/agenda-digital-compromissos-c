@@ -285,9 +285,9 @@ void cancelar_compromisso( Nodo ** N, char pesquisa [80]  ) {
         for(aux = *N; aux != NULL; aux = aux->prox) { 
             found = strstr( aux->compromisso.descricao, pesquisa ); /* should return 0x18 */
             int index = found - aux->compromisso.descricao;          /* index is 8 */
-            printf( "\n -----> %d\n", index );
-            if( index > -1 ) {
-                strcpy( aux->compromisso.descricao, "Compromisso cancelado" );
+            // printf( "\n -----> %d\n", index );
+            if( index > -1 && index < 3000 ) {
+                strcpy( aux->compromisso.descricao, "Compromisso cancelado\n" );
                 found_counter++;
             }
         }
