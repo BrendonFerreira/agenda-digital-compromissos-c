@@ -218,17 +218,20 @@ void salva_compromissos(Nodo **N){
 }
 
 void le_agenda(Nodo **N){
+    int loaded = 0;
 	Compromisso compromisso;
 	FILE *fp;
 	fp = fopen("agenda.dat", "r");
 	if(fp == NULL){
 		printf("ERRO: arquivo 'agenda.dat' nao existe\n");
 	}
-	printf("comecando a ler\n");
+	// printf("comecando a ler\n");
 	while(fread(&compromisso, sizeof(Compromisso), 1, fp)){
 		insere_ordenado_lista(N, compromisso);
-		printf("inserindo\n");
-	};
+        // printf("inserindo\n");
+        loaded++;
+    };
+    printf("Carregando %d compromissos.\n", loaded);
 	fclose(fp);             
 }
 
@@ -239,31 +242,21 @@ int main(){
     int choice;
     FILE *fp;
     inicializa_lista(&MyList);
-//    le_agenda(&MyList);
+    le_agenda(&MyList);
+
     do {
         printf("\n1. Novo compromisso");
         printf("\n2. Cancelar compromisso");
         printf("\n3. Listar compromissos");
         printf("\n4. Salva na agenda.dat");
-        printf("\n5. Le a agenda.dat");
-        printf("\n6. sair\n");
+        // printf("\n5. Le a agenda.dat");
+        printf("\n5. sair\n");
+        printf("\n6. Pesquisar por compromisso");
         scanf("%d%*c", &menu);
         switch(menu) {
             case 1:
                 novo_compromisso = le_dados();
                 insere_ordenado_lista( &MyList, novo_compromisso );
-				printf("Deseja salvar compromisso em um arquivo? 1-sim/2-nao\n");
-				scanf("%d", &choice);
-				switch(choice){
-					case 1:
-						salva_compromisso(novo_compromisso);
-						break;
-					case 2:
-						imprime_agenda(novo_compromisso);
-						break;
-					default:
-						printf("\nOpcao Invalida!!!");
-				}
                 break;
             case 2:
                 // Fazer funcao para cancelar compromisso
@@ -274,15 +267,15 @@ int main(){
 			case 4:
 				salva_compromissos(&MyList);
 				break;
-			case 5:
-				le_agenda(&MyList);
-				break;
-            case 6:
+			// case 5:
+			// 	le_agenda(&MyList);
+			// 	break;
+            case 5:
                 printf("\n\n\nSaindo do programa!");
                 break;
             default:
                 printf("\nOpcao Invalida!!!");
         }
-    } while(menu != 6);
+    } while(menu != 5);
     return 0;
 }
