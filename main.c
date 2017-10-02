@@ -2,6 +2,8 @@
 #include<stdlib.h>
 #include<stdbool.h>
 #include<string.h>
+#include<strings.h>
+#include<ctype.h>
 
 
 typedef struct Date {
@@ -235,9 +237,31 @@ void le_agenda(Nodo **N){
 	fclose(fp);             
 }
 
+int strcicmp(char const *a, char const *b) {
+    for (;; a++, b++) {
+        int d = tolower(*a) - tolower(*b);
+        if (d != 0 || !*a)
+            return d;
+    }
+}
+
+void buscar_compromisso( Nodo * N, char pesquisa [80]  ) {
+
+    Nodo *aux;
+    if(N == NULL)
+        printf("\n A lista estÃ¡ vazia!!");
+    else {
+        for(aux = N; aux != NULL; aux = aux->prox) { 
+            printf( "%d", strcicmp( pesquisa, aux->compromisso.descricao ) );
+            printf("\n");
+        }
+    }
+}
+
 int main(){
     Nodo *MyList = NULL;
     Compromisso novo_compromisso;
+    char pesquisa[80];
     int menu, valor;
     int choice;
     FILE *fp;
@@ -272,6 +296,11 @@ int main(){
 			// 	break;
             case 5:
                 printf("\n\n\nSaindo do programa!");
+                break;
+            case 6: 
+                // fflush( stdin );
+                fgets( pesquisa, 80, stdin );
+                buscar_compromisso( MyList, pesquisa );
                 break;
             default:
                 printf("\nOpcao Invalida!!!");
